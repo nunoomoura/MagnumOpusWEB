@@ -582,25 +582,53 @@ $(document).on('change', '.changeCategoria', function () {
 		});
 	});
 
+	$('#editStatus').on('submit', function (e) {
+		e.preventDefault();
 
-	$(document).on('click', '.editStatus', function () {
-
-		$('#verStatus_id').val($(this).attr('data-id'));
 
 		$.ajax({
 			url: 'api.php',
 			type: 'POST',
 			dataType: 'JSON',
-			data: { cmd: 'verStatus', cod_encomenda: $(this).attr('data-id') },
+			data: { cmd: 'editStatus', data: $(this).serialize() },
 			success: function (resultado) {
-				console.log(resultado);
-				$('#selectStatus').val(resultado.estado);
-				console.log(resultado.estado);
-				$('#modalStatus').modal({ backdrop: 'static', keyboard: false });
+				alerta(resultado.success, resultado.message, resultado.url);
 			}
 		});
 	});
-	
+
+	$(document).on('click', '.editStatus', function () {
+
+		$('#verEnc_id').val($(this).attr('id'));
+		$('#verStatus_id').val($(this).attr('data-id'));
+		var status = $(this).attr('data-id');
+		$.ajax({
+			url: 'api.php',
+			type: 'POST',
+			dataType: 'JSON',
+			data: { cmd: 'getEstados'},
+			success: function (resultado) {
+				var estados = '';
+				estados += "<option value='0'>Selecione um estado</option>';";
+				console.log(resultado);
+				resultado.estados.forEach(function (value) {
+					console.log(status + '|' + value.cod_estado);
+					if (status === value.cod_estado) {
+						console.log("entrei!");
+						estados += "<option selected value='" + value.cod_estado + "'> " + value.estado + ' </option>';
+						
+					} else {
+						estados += "<option value='" + value.cod_estado + "'> " + value.estado + ' </option>';						
+					}
+				
+				})
+				$('#cod_estado').empty().append(estados);
+
+				$('#modalStatus').modal({ backdrop: 'static', keyboard: false });
+			}
+
+		});
+	});
 
 
 });

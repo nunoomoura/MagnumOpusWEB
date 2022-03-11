@@ -102,7 +102,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <td><?php echo $us["data"]; ?></td>
                       <td><?php echo $us["estado"]; ?>
                         &nbsp
-                        <button data-id="<?php echo $us["cod_encomenda"]; ?>" type="button" class="btn btn-dark editStatus" data-toggle="modal" data-target="#modalStatus">
+                        <button id="<?php echo $us["cod_encomenda"]; ?>" data-id="<?php echo $us["cod_estado"]; ?>" type="button" class="btn btn-dark editStatus" data-toggle="modal" data-target="#modalStatus">
                           Atualizar Estado
                         </button>
                       </td>
@@ -158,20 +158,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
               </div>
               <div class="modal-body">
-              
-              <input type="hidden" id="verStatus_id" name="verStatus_id">
-              <label>Estado:</label>
-              <br>
-              <form id="editStatus" name="editStatus" class="editStatus">
-                <select name= "statusSelect" id = "statusSelect">
-                  <option value="Em Processamento">Em Processamento</option>
-                  <option value="Pronta para Levantamento">Pronta para Levantamento</option>
-                  <option value="Levantada em Loja">Levantada em Loja</option>
-                  <option value="Enviada">Enviada</option>
-                  <option value="Entregue">Entregue</option>
-                  <option value="Cancelada">Cancelada</option>
-                  <option value="Venda em Loja">Venda em Loja</option>
-                  </select>
+              <form id="editStatus" method="POST">
+                <input type="hidden" id="verEnc_id" name="verEnc_id">
+                <input type="hidden" id="verStatus_id" name="verStatus_id">
+                <label>Estado:</label>
+                <br>
+                <select id="cod_estado" name="cod_estado">  
+                </select>
                 <br><br>
                 <button type="submit" class="btn btn-primary block full-width m-b">Atualizar</button>
               </form>  

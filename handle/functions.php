@@ -51,7 +51,7 @@ function lista_client() {
 function lista_enc() {
         if ($_SESSION["info"]) {
                 $statement = $GLOBALS['db']->prepare("SELECT * FROM encomendas, clientes, encomendas_estados 
-                WHERE encomendas.cod_cliente = clientes.cod_cliente AND encomendas.cod_estado = encomendas_estados.cod_estado AND estado != '7' ");
+                WHERE encomendas.cod_cliente = clientes.cod_cliente AND encomendas.cod_estado = encomendas_estados.cod_estado AND encomendas_estados.cod_estado != '7' ");
                 $statement->execute();
                 return $statement->fetchAll();
         }
@@ -409,19 +409,35 @@ function eliminarEncProd () {
 function addEncProd () {
 
 }
-function getStatus() {
+function getEstados() {
         $statement = $GLOBALS['db']->prepare("SELECT * FROM encomendas_estados");
         $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        die(json_encode(array("success" => true, "estados" => $statement->fetchAll(PDO::FETCH_ASSOC))));
 
 }
 function verStatus ($idEnc = NULL){
-        $statement = $GLOBALS['db']->prepare("SELECT * FROM encomendas, estados WHERE cod_encomenda = ?");
+        $statement = $GLOBALS['db']->prepare("SELECT * FROM encomendas, encomendas_estados WHERE cod_encomenda = ? AND encomendas.cod_estado =
+                                         encomendas_estados.cod_estado");
         $statement->execute(array($idEnc));
-        $resultado = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $resultado = $statement->fetch(PDO::FETCH_ASSOC);
 
-        die(json_encode($resultado)); 
+        die(json_encode($resultado));
 }
 
+function editStatus($data) {
+        $verifica = $GLOBALS['db']->prepare("SELECT * FROM encomendas WHERE cod_encomenda = ?");
+        $verifica->execute(array($data["verEnc_id"]));
+        //$dados = $verifica->fetch();       
+
+        $statement = $GLOBALS['db']->prepare("UPDATE encomendas SET cod_estado = :cod_estado WHERE cod_encomenda = :cod_encomenda");
+        $statement->execute(array(
+            "cod_estado" => $data["cod_estado"],
+
+            "cod_encomenda" => $data["verEnc_id"]
+        ));
+
+        die(json_encode(array("success" => true , "message" => 'Dados alterados com sucesso.', "url" => ENCOMENDAS_URL)));
+}
 
 ?>

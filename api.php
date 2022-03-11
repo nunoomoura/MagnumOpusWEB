@@ -135,8 +135,11 @@
 		if ($_POST["cmd"] == "addEncProd") {
 			addEncProd($data);
 		};
-		if ($_POST["cmd"] == "verStatus") {
-			verStatus($_POST["cod_encomenda"]);
+		if ($_POST["cmd"] == "getEstados") {
+			getEstados();
+		};
+		if ($_POST["cmd"] == "editStatus") {
+			editStatus($data);
 		};
 	};
 
